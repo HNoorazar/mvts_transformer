@@ -252,21 +252,21 @@ def validate(
     eval_start_time = time.time()
     with torch.no_grad():
         aggr_metrics, per_batch = val_evaluator.evaluate(epoch, keep_all=True)
-        print()
-        print("----------------- HN deBug ----------------- ")
-        print()
+        # print()
+        # print("----------------- HN deBug ----------------- ")
+        # print()
 
-        print(type(per_batch))
-        print(type(aggr_metrics))
+        # print(type(per_batch))
+        # print(type(aggr_metrics))
 
-        print(f"{len(per_batch.keys()) = }")
-        print(f"{len(aggr_metrics.keys()) = }")
+        # print(f"{len(per_batch.keys()) = }")
+        # print(f"{len(aggr_metrics.keys()) = }")
 
-        print(per_batch.keys())
-        print(aggr_metrics.keys())
+        # print(per_batch.keys())
+        # print(aggr_metrics.keys())
 
-        print()
-        print()
+        # print()
+        # print()
     eval_runtime = time.time() - eval_start_time
     logger.info(
         "Validation runtime: {} hours, {} minutes, {} seconds\n".format(
@@ -325,40 +325,56 @@ def validate(
         #     print(f"{key}: type={type(val)}, len={len(val)}")
 
         ##### HN: Test if this words: resolves the issue
-        max_len_ = float("-inf")
-        for key, val in per_batch.items():
-            if len(val) > max_len_:
-                max_len_ = len(val)
+        # max_len_ = float("-inf")
+        # print("------------- hiiiiiii ----------------------------------------")
+        # print(type(per_batch))
+        # print((per_batch.keys()))
 
-        print(f"{max_len_ = }")
-        # pad the short ones
-        for key, val in per_batch.items():
-            print(f"{key=}, {type(val) = }, {len(val) = }")
-            print()
-            if len(val) < max_len_:
-                per_batch[key] = np.array(
-                    [per_batch[key] + [float("nan")] * (max_len_ - len(val))]
-                ).flatten()
-                print("------------------     after padding if    ------------------")
-                print(f"{key=}: {type(val) = }")
-            else:
-                per_batch[key] = np.array(per_batch[key]).flatten()
-                print("------------------     after padding else    ------------------")
-                print(
-                    f"{key}: type={type(val)}, shape={getattr(val, 'shape', 'not an array')}"
-                )
+        # print("------------- hiiiiiii ----------------------------------------")
 
-        print()
-        print("------------------     after padding  355   ------------------")
+        # for key, val in per_batch.items():
+        #     if len(val) > max_len_:
+        #         max_len_ = len(val)
 
-        for key, val in per_batch.items():
-            print(
-                f"{key}: type={type(val)}, shape={getattr(val, 'shape', 'not an array')}"
-            )
+        # print(f"{max_len_ = }")
+        # # pad the short ones
+        # for key, val in per_batch.items():
+        #     print(f"{key=}, {type(val) = }, {len(val) = }")
+        #     print()
+        #     if len(val) < max_len_:
+        #         print("if")
+        #         print(per_batch[key])
+        #         print()
+        #         per_batch[key] = np.array(
+        #             [per_batch[key] + [float("nan")] * (max_len_ - len(val))]
+        #         ).flatten()
+        #         print("------------------     after padding if    ------------------")
+        #         print(f"{key=}: {type(val) = }")
+        #     else:
+        #         print("else")
+        #         print(f"{key=}: {type(val) = }")
+        #         # print(per_batch[key])
+        #         print()
+        #         per_batch[key] = np.array(per_batch[key]).flatten()
+        #         print("------------------     after padding else    ------------------")
+        #         print(
+        #             f"{key}: type={type(val)}, shape={getattr(val, 'shape', 'not an array')}"
+        #         )
 
-        print()
-        print()
-        np.savez(pred_filepath, **per_batch)
+        # print()
+        # print("------------------     after padding  355   ------------------")
+
+        # for key, val in per_batch.items():
+        #     print(
+        #         f"{key}: type={type(val)}, shape={getattr(val, 'shape', 'not an array')}"
+        #     )
+
+        # print()
+        # print()
+
+        # np.savez(pred_filepath, **per_batch)
+        with open(pred_filepath, "wb") as f:
+            pickle.dump(per_batch, f, pickle.HIGHEST_PROTOCOL)
 
     return aggr_metrics, best_metrics, best_value
 
